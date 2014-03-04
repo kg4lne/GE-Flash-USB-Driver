@@ -1,4 +1,12 @@
-; Adapted from the example INF in the Microsoft document "How to Use WinUSB to Communicate with a USB Device"
+; -----------------------------------------------------------------------------
+;
+; GE-Flash USB Driver - v1.01 (03/03/2014)
+;
+; WinUSB Device driver installer file for Windows 7 (32/64 bit)
+;
+; Copyright (C) 2014, KG4LNE
+;
+; -----------------------------------------------------------------------------
 
 [Version]
 Signature = "$Windows NT$"
@@ -21,11 +29,26 @@ DriverVer=05/31/2013,1.0.0
 
 ; =================== Installation ===================
 
-[USB_Install]
+[ClassInstall32]
+AddReg=AddReg_ClassInstall
+
+[AddReg_ClassInstall]
+HKR,,,,"%DeviceClassDisplayName%"
+HKR,,Icon,,-1
+
+[USB_Install.NTx86]
 Include=winusb.inf
 Needs=WINUSB.NT
 
-[USB_Install.Services]
+[USB_Install.NTamd64]
+Include=winusb.inf
+Needs=WINUSB.NT
+
+[USB_Install.NTx86.Services]
+Include=winusb.inf
+AddService=WinUSB,0x00000002,WinUSB_ServiceInstall
+
+[USB_Install.NTamd64.Services]
 Include=winusb.inf
 AddService=WinUSB,0x00000002,WinUSB_ServiceInstall
 
@@ -36,63 +59,60 @@ StartType       = 3
 ErrorControl    = 1
 ServiceBinary   = %12%\WinUSB.sys
 
-[USB_Install.Wdf]
+[USB_Install.NTx86.Wdf]
 KmdfService=WINUSB, WinUsb_Install
-UmdfServiceOrder=WINUSB
+
+[USB_Install.NTamd64.Wdf]
+KmdfService=WINUSB, WinUsb_Install
 
 [WinUSB_Install]
 KmdfLibraryVersion=1.9
 
-[USB_Install.HW]
+[USB_Install.NTx86.HW]
+AddReg=Dev_AddReg
+
+[USB_Install.NTamd64.HW]
 AddReg=Dev_AddReg
 
 [Dev_AddReg]
 HKR,,DeviceInterfaceGUIDs,0x10000,"{42CA71EC-CE1C-44c2-82DE-87D8D8FF6C1E}"
 
-[USB_Install.CoInstallers]
+[USB_Install.NTx86.CoInstallers]
+AddReg=CoInstallers_AddReg
+CopyFiles=CoInstallers_CopyFiles
+
+[USB_Install.NTamd64.CoInstallers]
 AddReg=CoInstallers_AddReg
 CopyFiles=CoInstallers_CopyFiles
 
 [CoInstallers_AddReg]
-HKR,,CoInstallers32,0x00010000,"WinUSBCoInstaller2.dll","WUDFUpdate_01009.dll","WdfCoInstaller01009.dll,WdfCoInstaller"
+HKR,,CoInstallers32,0x00010000,"WinUSBCoInstaller2.dll","WdfCoInstaller01009.dll,WdfCoInstaller"
 
 [CoInstallers_CopyFiles]
 WinUSBCoInstaller2.dll
 WdfCoInstaller01009.dll
-WUDFUpdate_01009.dll
 
 [DestinationDirs]
 CoInstallers_CopyFiles=11
 
 ; ================= Source Media Section =====================
 
-[SourceDisksNames.x86]
-1 = %DISK_NAME%,,,\i386
-
-[SourceDisksNames.amd64]
-2 = %DISK_NAME%,,,\amd64
+[SourceDisksNames]
+1 = %DISK_NAME%,,,\x86
+2 = %DISK_NAME%,,,\ia64
+3 = %DISK_NAME%,,,\amd64
 
 [SourceDisksFiles.x86]
 WinUSBCoInstaller2.dll=1
 WdfCoInstaller01009.dll=1
-WUDFUpdate_01009.dll=1
 
-[SourceDisksFiles.amd64]
+[SourceDisksFiles.ia64]
 WinUSBCoInstaller2.dll=2
 WdfCoInstaller01009.dll=2
-WUDFUpdate_01009.dll=2
 
-; Copy Files section
-;------------------------------------------------------------------------------
-[_CopyFiles_sys]
-winusb.sys
-
-;************************************************* *****************************
-; Destination Directories
-;------------------------------------------------------------------------------
-[DestinationDirs]
-DefaultDestDir = 12 ; %SystemRoot%\system32\drivers
-_CopyFiles_sys = 12
+[SourceDisksFiles.amd64]
+WinUSBCoInstaller2.dll=3
+WdfCoInstaller01009.dll=3
 
 ; =================== Strings ===================
 
@@ -101,4 +121,4 @@ ProviderName="KG4LNE"
 USB\GE-FlashUSB.DeviceDesc="GE-Flash USB Programmer (WinUSB)"
 WinUSB_SvcDesc="GE-Flash USB Programmer (WinUSB)"
 DISK_NAME="GE-Flash Install Disk (WinUSB)"
-
+DeviceClassDisplayName="GE-Flash USB Devices"
