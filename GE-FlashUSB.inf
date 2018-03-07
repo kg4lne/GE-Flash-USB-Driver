@@ -22,10 +22,10 @@ DriverVer=05/31/2013,1.0.0
 %ProviderName% = GE-FlashUSB_WinUSB,NTx86,NTamd64
 
 [GE-FlashUSB_WinUSB.NTx86]
-%USB\GE-FlashUSB.DeviceDesc% =USB_Install, USB\VID_03EB&PID_2FFF
+%USB\GE-FlashUSB.DeviceDesc% =USB_Install, USB\VID_1209&PID_CEB0
 
 [GE-FlashUSB_WinUSB.NTamd64]
-%USB\GE-FlashUSB.DeviceDesc% =USB_Install, USB\VID_03EB&PID_2FFF
+%USB\GE-FlashUSB.DeviceDesc% =USB_Install, USB\VID_1209&PID_CEB0
 
 ; =================== Installation ===================
 
